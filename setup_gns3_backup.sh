@@ -1,44 +1,40 @@
 #!/bin/bash
 
-# Logfile
-LOGFILE="/var/log/gns3_backup.log"
+# Pad voor backupfolder
+BACKUP_DIR="/gns-backup"
 
-# Datum en tijd
-NOW=$(date +"%Y-%m-%d %H:%M:%S")
+# Check of de folder bestaat, anders aanmaken
+if [ ! -d "$BACKUP_DIR" ]; then
+    mkdir -p "$BACKUP_DIR"
+    echo "Backup directory aangemaakt: $BACKUP_DIR"
+fi
 
-# Logfunctie
-log() {
-    echo "[$NOW] $1" >> "$LOGFILE"
-}
+# Scriptbestand voor de backup
+BACKUP_SCRIPT="/usr/local/bin/gns3_backup.sh"
 
-# Start loggen
-log "Backup gestart"
+# Maak het daadwerkelijke backupscript
+cat << 'EOF' > $BACKUP_SCRIPT
+#!/bin/bash
 
 SRC_DIR="/opt/gns3/projects"
 DEST_DIR="/gns-backup"
-STAMP=$(date +"%Y%m%d-%H%M%S")
+NOW=$(date +"%Y%m%d-%H%M%S")
 
-# Zoek en kopieer alle .gns3-bestanden
-if [ -d "$SRC_DIR" ]; then
-    find "$SRC_DIR" -type f -name "*.gns3" | while read FILE; do
-        BASENAME=$(basename "$FILE" .gns3)
-        DESTFILE="$DEST_DIR/${BASENAME}_$STAMP.gns3"
-        if cp "$FILE" "$DESTFILE" 2>>"$LOGFILE"; then
-            log "Gekopieerd: $FILE → $DESTFILE"
-        else
-            log "FOUT bij kopiëren: $FILE"
-        fi
-    done
-else
-    log "FOUT: bronmap $SRC_DIR bestaat niet"
-fi
+# Vind alle *.gns3 bestanden en kopieer ze
+find "$SRC_DIR" -type f -name "*.gns3" | while read FILE; do
+    BASENAME=$(basename "$FILE" .gns3)
+    cp "$FILE" "$DEST_DIR/${BASENAME}_$NOW.gns3"
+done
 
 # Verwijder bestanden ouder dan 5 dagen
-if find "$DEST_DIR" -type f -name "*.gns3" -mtime +5 -exec rm -f {} \; 2>>"$LOGFILE"; then
-    log "Oude bestanden (>5 dagen) verwijderd"
-else
-    log "FOUT bij verwijderen oude bestanden"
-fi
+find "$DEST_DIR" -type f -name "*.gns3" -mtime +5 -exec rm {} \;
+EOF
 
-log "Backup klaar"
-echo "" >> "$LOGFILE"
+# Zorg dat het script uitvoerbaar is
+chmod +x $BACKUP_SCRIPT
+
+# Cronjob toevoegen (ieder uur)
+# Eerst checken of er niet al een regel staat
+(crontab -l 2>/dev/null | grep -v "$BACKUP_SCRIPT"; echo "0 * * * * $BACKUP_SCRIPT") | crontab -
+
+echo "Backupscript en cronjob ingesteld."
