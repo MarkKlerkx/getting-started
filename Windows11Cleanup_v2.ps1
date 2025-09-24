@@ -83,25 +83,6 @@ if (Test-Path $UpdateCachePath) {
 
 Write-Host "Section 2: Removing Unnecessary Software" -ForegroundColor Cyan
 
-# Step 2.1: Remove Bloatware Apps
-Write-Host "  - Step 2.1: Removing default bloatware apps..." -ForegroundColor Yellow
-$BloatwareApps = @(
-    "Microsoft.YourPhone",
-    "Microsoft.ZuneVideo",
-    "Microsoft.ZuneMusic",
-    "Microsoft.WindowsSoundRecorder",
-    "Microsoft.WindowsMaps",
-    "Microsoft.People",
-    "Microsoft.GamingApp",
-    "Microsoft.549981C3F5F10" # Cortana
-)
-
-foreach ($App in $BloatwareApps) {
-    Write-Host "    - Attempting to remove: $App"
-    Get-AppxPackage -Name $App | Remove-AppxPackage -ErrorAction SilentlyContinue
-    Get-AppxProvisionedPackage -Online | Where-Object {$_.PackageName -like "*$App*"} | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
-}
-
 # --- Section 3: Deep System Cleanup ---
 
 Write-Host "Section 3: Performing Deep System Cleanup" -ForegroundColor Cyan
