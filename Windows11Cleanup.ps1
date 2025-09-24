@@ -36,17 +36,17 @@ Write-Host "  - Step 1.1: Disabling Hibernation (removing hiberfil.sys)..." -For
 powercfg /h off
 
 # Step 1.2: Set a fixed Page File size
-Write-Host "  - Step 1.2: Setting Page File (pagefile.sys) to a fixed size of 2048 MB..." -ForegroundColor Yellow
+Write-Host "  - Step 1.2: Setting Page File (pagefile.sys) to a fixed size of 1024 MB..." -ForegroundColor Yellow
 $ComputerSystem = Get-WmiObject -Class Win32_ComputerSystem -EnableAllPrivileges
 $ComputerSystem.AutomaticManagedPagefile = $false
 $ComputerSystem.Put() | Out-Null
 $PageFile = Get-WmiObject -Query "SELECT * FROM Win32_PageFileSetting WHERE Name='C:\pagefile.sys'"
 if ($PageFile) {
-    $PageFile.InitialSize = 2048
-    $PageFile.MaximumSize = 2048
+    $PageFile.InitialSize = 1024
+    $PageFile.MaximumSize = 1024
     $PageFile.Put() | Out-Null
 } else {
-    Set-WmiInstance -Class Win32_PageFileSetting -Arguments @{Name="C:\pagefile.sys"; InitialSize = 2048; MaximumSize = 2048} | Out-Null
+    Set-WmiInstance -Class Win32_PageFileSetting -Arguments @{Name="C:\pagefile.sys"; InitialSize = 1024; MaximumSize = 1024} | Out-Null
 }
 
 # Step 1.3: Disable System Restore
