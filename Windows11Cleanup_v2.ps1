@@ -78,11 +78,6 @@ if (Test-Path $UpdateCachePath) {
     Remove-Item -Path "$UpdateCachePath\*" -Recurse -Force -ErrorAction SilentlyContinue
 }
 
-
-# --- Section 2: Remove Unnecessary Software ---
-
-Write-Host "Section 2: Removing Unnecessary Software" -ForegroundColor Cyan
-
 # --- Section 3: Deep System Cleanup ---
 
 Write-Host "Section 3: Performing Deep System Cleanup" -ForegroundColor Cyan
