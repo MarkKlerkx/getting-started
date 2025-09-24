@@ -7,7 +7,7 @@
 .DESCRIPTION
     The script performs the following actions:
     1. Disables the Hibernation feature (removes hiberfil.sys).
-    2. Sets the Page File to a fixed, smaller size (2 GB).
+    2. Sets the Page File to a fixed, smaller size (1 GB).
     3. Disables System Restore and removes existing restore points.
     4. Permanently disables the Windows Update service and clears its cache.
     5. Removes a list of common 'bloatware' apps.
