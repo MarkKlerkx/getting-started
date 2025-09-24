@@ -37,16 +37,20 @@ powercfg /h off
 
 # Step 1.2: Set a fixed Page File size
 Write-Host "  - Step 1.2: Setting Page File (pagefile.sys) to a fixed size of 1024 MB..." -ForegroundColor Yellow
-$ComputerSystem = Get-WmiObject -Class Win32_ComputerSystem -EnableAllPrivileges
+# First, disable automatic management
+$ComputerSystem = Get-CimInstance -ClassName Win32_ComputerSystem
 $ComputerSystem.AutomaticManagedPagefile = $false
-$ComputerSystem.Put() | Out-Null
-$PageFile = Get-WmiObject -Query "SELECT * FROM Win32_PageFileSetting WHERE Name='C:\pagefile.sys'"
+Set-CimInstance -InputObject $ComputerSystem
+
+# Now, find any existing page file setting
+$PageFile = Get-CimInstance -ClassName Win32_PageFileSetting | Select-Object -First 1
+
 if ($PageFile) {
-    $PageFile.InitialSize = 1024
-    $PageFile.MaximumSize = 1024
-    $PageFile.Put() | Out-Null
+    # If a setting exists, modify it
+    Set-CimInstance -InputObject $PageFile -Property @{InitialSize = 1024; MaximumSize = 1024}
 } else {
-    Set-WmiInstance -Class Win32_PageFileSetting -Arguments @{Name="C:\pagefile.sys"; InitialSize = 1024; MaximumSize = 1024} | Out-Null
+    # If no setting exists, create a new one
+    Set-CimInstance -ClassName Win32_PageFileSetting -Property @{Name="C:\pagefile.sys"; InitialSize = 1024; MaximumSize = 1024}
 }
 
 # Step 1.3: Disable System Restore
