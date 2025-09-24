@@ -8,7 +8,7 @@ FTP_FILE="Windows10Template.qcow2"
 
 # GNS3 Settings
 GNS3_IMAGE_DIR="/opt/gns3/images/QEMU"
-GNS3_CONFIG_FILE="$HOME/.config/GNS3/2.2/gns3_controller.conf"
+GNS3_CONFIG_FILE="/home/gns3/.config/GNS3/2.2/gns3_controller.conf"
 TEMPLATE_NAME="Windows10Template"
 LOCAL_FILE_PATH="$GNS3_IMAGE_DIR/$FTP_FILE"
 GNS3_SERVICE_NAME="gns3" # Service name updated to 'gns3'
