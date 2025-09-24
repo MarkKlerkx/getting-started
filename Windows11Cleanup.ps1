@@ -24,12 +24,12 @@ if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
 }
 
 # Start of the script
-Write-Host "🚀 Starting the Windows 11 Optimization Script..." -ForegroundColor Green
+Write-Host "Starting the Windows 11 Optimization Script..." -ForegroundColor Green
 Write-Host "======================================================="
 
 # --- Section 1: System Tweaks ---
 
-Write-Host "⚙️ Section 1: Applying System Tweaks" -ForegroundColor Cyan
+Write-Host "Section 1: Applying System Tweaks" -ForegroundColor Cyan
 
 # Step 1.1: Disable Hibernation
 Write-Host "  - Step 1.1: Disabling Hibernation (removing hiberfil.sys)..." -ForegroundColor Yellow
@@ -77,7 +77,7 @@ if (Test-Path $UpdateCachePath) {
 
 # --- Section 2: Remove Unnecessary Software ---
 
-Write-Host "🗑️ Section 2: Removing Unnecessary Software" -ForegroundColor Cyan
+Write-Host "Section 2: Removing Unnecessary Software" -ForegroundColor Cyan
 
 # Step 2.1: Remove Bloatware Apps
 Write-Host "  - Step 2.1: Removing default bloatware apps..." -ForegroundColor Yellow
@@ -100,7 +100,7 @@ foreach ($App in $BloatwareApps) {
 
 # --- Section 3: Deep System Cleanup ---
 
-Write-Host "🧹 Section 3: Performing Deep System Cleanup" -ForegroundColor Cyan
+Write-Host "Section 3: Performing Deep System Cleanup" -ForegroundColor Cyan
 
 # Step 3.1: Clean up Component Store (WinSxS) with DISM
 Write-Host "  - Step 3.1: Cleaning up the Component Store (WinSxS) with DISM (this may take a while)..." -ForegroundColor Yellow
@@ -112,6 +112,6 @@ compact.exe /CompactOS:always
 
 # --- Completion ---
 Write-Host "======================================================="
-Write-Host "✅ Optimization complete!" -ForegroundColor Green
+Write-Host "Optimization complete!" -ForegroundColor Green
 Write-Host "A system restart is recommended for all changes to take effect."
 Read-Host "Press Enter to close this window."
