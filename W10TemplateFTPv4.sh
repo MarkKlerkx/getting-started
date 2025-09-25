@@ -33,7 +33,7 @@ if [ -f "$LOCAL_FILE_PATH" ]; then
 else
     echo "Image not found. Starting download procedure..."
     
-    # NIEUW: Controleer beschikbare schijfruimte
+    # Controleer beschikbare schijfruimte
     echo "Checking for available disk space..."
     AVAILABLE_SPACE_KB=$(df -k "$GNS3_IMAGE_DIR" | tail -1 | awk '{print $4}')
     
@@ -45,7 +45,6 @@ else
     else
         echo "✅ Sufficient disk space available. Proceeding with download."
     fi
-    # EINDE NIEUW BLOK
 
     mkdir -p "$GNS3_IMAGE_DIR"
     lftp -u anonymous, $FTP_SERVER <<EOF
@@ -80,11 +79,11 @@ fi
 echo ""
 echo "--- Step 3: Finalizing configuration ---"
 if [ "$NEEDS_POST_CONFIG_STEPS" = true ]; then
-    # NEW: Set owner and group to gns3:gns3
+    # Set owner and group to gns3:gns3
     echo "Setting owner and permissions for configuration file..."
     sudo chown gns3:gns3 "$GNS3_CONFIG_FILE"
     
-    # NEW: Set permissions to -rw-rw-r-- (664)
+    # Set permissions to -rw-rw-r-- (664)
     sudo chmod 664 "$GNS3_CONFIG_FILE"
     echo "✅ Owner and permissions set correctly."
 
@@ -98,11 +97,26 @@ fi
 
 echo ""
 echo "Script finished successfully!"
-echo ""
 
-# NIEUW: Laat het eindbericht zien
-echo "----------------------------------------------------------------------------------------------"
-echo "Please remove the Windows 11 VM's from your project and the Windows 11 template."
-echo "You also have to delete the Windows 11 diskfiles. You have to do this from the console by executing the following command:"
-echo "sudo rm /opt/gns3/images/QEMU/Windows11Preset.*"
-echo "----------------------------------------------------------------------------------------------"
+# --- FINALE BOODSCHAP ---
+# Kleurcodes definiëren voor leesbaarheid
+YELLOW='\e[1;33m'
+RED_BOLD='\e[1;31m'
+NC='\e[0m' # No Color (reset)
+
+echo ""
+# Gebruik de -e vlag om de kleurcodes te interpreteren
+echo -e "${YELLOW}################################################################################${NC}"
+echo -e "${YELLOW}#                                                                              #${NC}"
+echo -e "${YELLOW}#                          BELANGRIJKE ACTIE VEREIST                           #${NC}"
+echo -e "${YELLOW}#                                                                              #${NC}"
+echo -e "${YELLOW}################################################################################${NC}"
+echo ""
+echo "De Windows 10 template is nu klaar voor gebruik."
+echo "Om de installatie compleet te maken, moet je de oude Windows 11 bestanden handmatig verwijderen."
+echo ""
+echo "Voer het volgende commando uit in de console om de schijfbestanden op te ruimen:"
+echo -e "   ${RED_BOLD}sudo rm /opt/gns3/images/QEMU/Windows11Preset.*${NC}"
+echo ""
+echo "Dit verwijdert de verouderde template en de bijbehorende bestanden."
+echo -e "${YELLOW}--------------------------------------------------------------------------------${NC}"
