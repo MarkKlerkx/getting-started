@@ -106,11 +106,11 @@ NC='\e[0m' # No Color (reset)
 
 echo ""
 # Use the -e flag to interpret the color codes
-echo -e "${YELLOW}################################################################################${NC}"
+echo -e "${YELLOW}###############################################################################${NC}"
 echo -e "${YELLOW}#                                                                              #${NC}"
 echo -e "${YELLOW}#                           IMPORTANT: ACTION REQUIRED                           #${NC}"
 echo -e "${YELLOW}#                                                                              #${NC}"
-echo -e "${YELLOW}################################################################################${NC}"
+echo -e "${YELLOW}###############################################################################${NC}"
 echo ""
 echo "The Windows 10 template is ready. To complete the cleanup, please follow these steps:"
 echo ""
