@@ -33,7 +33,7 @@ if [ -f "$LOCAL_FILE_PATH" ]; then
 else
     echo "Image not found. Starting download procedure..."
     
-    # Controleer beschikbare schijfruimte
+    # Check for available disk space
     echo "Checking for available disk space..."
     AVAILABLE_SPACE_KB=$(df -k "$GNS3_IMAGE_DIR" | tail -1 | awk '{print $4}')
     
@@ -98,25 +98,31 @@ fi
 echo ""
 echo "Script finished successfully!"
 
-# --- FINALE BOODSCHAP ---
-# Kleurcodes definiëren voor leesbaarheid
+# --- FINAL MESSAGE ---
+# Define color codes for readability
 YELLOW='\e[1;33m'
 RED_BOLD='\e[1;31m'
 NC='\e[0m' # No Color (reset)
 
 echo ""
-# Gebruik de -e vlag om de kleurcodes te interpreteren
+# Use the -e flag to interpret the color codes
 echo -e "${YELLOW}################################################################################${NC}"
 echo -e "${YELLOW}#                                                                              #${NC}"
-echo -e "${YELLOW}#                          BELANGRIJKE ACTIE VEREIST                           #${NC}"
+echo -e "${YELLOW}#                           IMPORTANT: ACTION REQUIRED                           #${NC}"
 echo -e "${YELLOW}#                                                                              #${NC}"
 echo -e "${YELLOW}################################################################################${NC}"
 echo ""
-echo "De Windows 10 template is nu klaar voor gebruik."
-echo "Om de installatie compleet te maken, moet je de oude Windows 11 bestanden handmatig verwijderen."
+echo "The Windows 10 template is ready. To complete the cleanup, please follow these steps:"
 echo ""
-echo "Voer het volgende commando uit in de console om de schijfbestanden op te ruimen:"
+echo -e "${YELLOW}Step 1: Remove the Windows 11 VMs from your GNS3 Project${NC}"
+echo "   - Open your GNS3 projects and delete any VMs that use the old Windows 11 template."
+echo ""
+echo -e "${YELLOW}Step 2: Delete the Windows 11 Template from GNS3${NC}"
+echo "   - In GNS3, go to 'Edit' -> 'Preferences' -> 'QEMU VMs'."
+echo "   - Select the 'Windows 11' template and click 'Delete'."
+echo ""
+echo -e "${YELLOW}Step 3: Delete the Template Disk Files from the Server${NC}"
+echo "   - Finally, run the following command in the server console to remove the actual files:"
 echo -e "   ${RED_BOLD}sudo rm /opt/gns3/images/QEMU/Windows11Preset.*${NC}"
 echo ""
-echo "Dit verwijdert de verouderde template en de bijbehorende bestanden."
 echo -e "${YELLOW}--------------------------------------------------------------------------------${NC}"
