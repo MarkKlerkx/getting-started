@@ -13,6 +13,9 @@ TEMPLATE_NAME="Windows10Template"
 LOCAL_FILE_PATH="$GNS3_IMAGE_DIR/$FTP_FILE"
 GNS3_SERVICE_NAME="gns3" # Service name updated to 'gns3'
 
+# Space requirement (15GB in KB)
+REQUIRED_SPACE_KB=$((15 * 1024 * 1024))
+
 # JSON data for the new template
 TEMPLATE_JSON='{"name":"Windows10Template","default_name_format":"{name}-{0}","usage":"","symbol":"Microsoft_logo.svg","category":"guest","port_name_format":"Ethernet{0}","port_segment_size":0,"first_port_name":"","custom_adapters":[],"qemu_path":"/bin/qemu-system-x86_64","hda_disk_image":"Windows10Template.qcow2","hdb_disk_image":"","hdc_disk_image":"","hdd_disk_image":"","hda_disk_interface":"ide","hdb_disk_interface":"none","hdc_disk_interface":"none","hdd_disk_interface":"none","cdrom_image":"","bios_image":"","boot_priority":"c","console_type":"vnc","console_auto_start":false,"ram":2048,"cpus":2,"adapters":1,"adapter_type":"e1000","mac_address":null,"legacy_networking":false,"replicate_network_connection_state":true,"tpm":false,"uefi":false,"create_config_disk":false,"on_close":"shutdown_signal","platform":"","cpu_throttling":0,"process_priority":"normal","options":"","kernel_image":"","initrd":"","kernel_command_line":"","linked_clone":true,"compute_id":"local","template_id":"6a40307a-5da1-4add-bf22-6ed4a94a5606","template_type":"qemu","builtin":false}'
 
@@ -29,6 +32,21 @@ if [ -f "$LOCAL_FILE_PATH" ]; then
     echo "✅ Image already exists: $LOCAL_FILE_PATH. Skipping download."
 else
     echo "Image not found. Starting download procedure..."
+    
+    # NIEUW: Controleer beschikbare schijfruimte
+    echo "Checking for available disk space..."
+    AVAILABLE_SPACE_KB=$(df -k "$GNS3_IMAGE_DIR" | tail -1 | awk '{print $4}')
+    
+    if [ "$AVAILABLE_SPACE_KB" -lt "$REQUIRED_SPACE_KB" ]; then
+        echo "❌ ERROR: Not enough disk space."
+        echo "Required: 15 GB, Available: $(($AVAILABLE_SPACE_KB / 1024 / 1024)) GB."
+        echo "Please free up space on the partition for $GNS3_IMAGE_DIR and run the script again."
+        exit 1
+    else
+        echo "✅ Sufficient disk space available. Proceeding with download."
+    fi
+    # EINDE NIEUW BLOK
+
     mkdir -p "$GNS3_IMAGE_DIR"
     lftp -u anonymous, $FTP_SERVER <<EOF
 set ftp:passive-mode on
@@ -80,3 +98,11 @@ fi
 
 echo ""
 echo "Script finished successfully!"
+echo ""
+
+# NIEUW: Laat het eindbericht zien
+echo "----------------------------------------------------------------------------------------------"
+echo "Please remove the Windows 11 VM's from your project and the Windows 11 template."
+echo "You also have to delete the Windows 11 diskfiles. You have to do this from the console by executing the following command:"
+echo "sudo rm /opt/gns3/images/QEMU/Windows11Preset.*"
+echo "----------------------------------------------------------------------------------------------"
